@@ -36,20 +36,15 @@ capability, not a disabled flag.
 Four layers, each owning exactly one kind of decision. The point of the split is that a new
 idea should be a directory someone copies, not a branch someone maintains.
 
-```mermaid
-flowchart LR
-    D["<b>① Data</b><br/>declared scope per market<br/>point-in-time cuts<br/>undeclared source ⇒ empty"]
-    S["<b>② Strategy</b><br/>mandate + manifest<br/>inherits, writes only differences<br/>thresholds live in code"]
-    E["<b>③ Evaluation</b><br/>proposer ≠ approver<br/>mechanical gates<br/>leak scan on the way out"]
-    M["<b>④ Memory</b><br/>partitioned per market<br/>distilled from live runs only<br/>human-gated promotion"]
-    D --> S --> E --> M
-    M -. "next session's recall" .-> D
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/four-layer-dark.svg">
+  <img alt="Four layers: data, strategy, evaluation, memory, with memory feeding the next session's recall" src="assets/four-layer-light.svg">
+</picture>
 
 **① Data — declaring a source is what grants access to it.** Each market's agent carries an
 explicit data scope, enforced at the read seam: an undeclared source returns *empty* and is
-noted on the receipt, rather than quietly working. Cross-market reads exist, but they have to be
-written down. Historical runs sit under harder law — the generator loses network access, a
+noted on the receipt, rather than quietly working. Cross-market reads exist, but they have to
+be written down. Historical runs sit under harder law — the generator loses network access, a
 non-point-in-time endpoint returns nothing on a cache miss instead of reaching for today's
 value, and the shared price store is read-only. A number that did not exist on the day cannot
 enter a decision dated that day.
@@ -73,35 +68,42 @@ scorer, and every offline lesson is about a system you are not running.
 one deliberately narrow shared channel, so a Tokyo mistake cannot quietly become a New York
 prior. The overnight layer drafts lessons from closed positions, but each candidate waits in a
 review state until a person promotes it, and it distils from live sessions only — an experiment
-can never teach the book something that never happened. Automated learning with no human gate is
-how a book quietly teaches itself last quarter's regime.
+can never teach the book something that never happened.
+
+<details>
+<summary><b>Four invariants the prompt is not allowed to talk you out of</b></summary>
+
+<br>
+
+Prompts drift. Someone softens a mandate at 2am and three weeks later the system is doing
+something nobody chose. The defence is to put the rules that must never break where the model
+cannot reach them, and to treat any violation as a bug regardless of what the prompt says.
+
+| | Rule | What it means in practice |
+|---|---|---|
+| **01** | **Proposer ≠ approver** | The model that generates an idea never approves it. Approval is a separate stage with its own configuration. No agent marks its own work. |
+| **02** | **Default-wait** | The resting state is to do nothing. Early entry needs a specific unlocked path whose quantitative legs are judged by code. **Skip is a first-class output — there is no idea quota.** |
+| **03** | **No lookahead** | The position must be complete before the catalyst prints. Historical runs are mechanically sandboxed with a hard leak scan, never weakened to make a backtest look better. |
+| **04** | **No execution path** | Analysis, email, dashboard. The capability to place an order does not exist in the codebase — which is what makes the claim checkable rather than promised. |
+
+</details>
 
 ### Underneath all four — context is assembled, not remembered
 
-```mermaid
-flowchart LR
-    A["Session transcript<br/><i>this run's event stream</i>"]
-    B["Session state<br/><i>frozen inputs, the day's cut</i>"]
-    C["Memory<br/><i>ledger + rules, not numbers</i>"]
-    D["Policy and tools<br/><i>boundaries and capabilities</i>"]
-    W["<b>Working set</b><br/>the only thing<br/>the model sees"]
-    MC["Model call<br/>K independent<br/>generations"]
-    P["<b>Persist + receipt</b><br/>what was used<br/>which config<br/>what survived"]
-    A --> W
-    B --> W
-    C --> W
-    D --> W
-    W --> MC --> P
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/harness-dark.svg">
+  <img alt="Transcript, session state, memory and policy assemble into one working set, which is all the model sees" src="assets/harness-light.svg">
+</picture>
 
 The model knows nothing between runs; something assembles a working set and hands it over. If
 you cannot say precisely what was in it, you cannot explain the output, let alone reproduce it
 a month later — so every receipt answers five questions: **what woke it · which state it read ·
-under whose authority · what it executed · what survived.**
+under whose authority · what it executed · what survived.** A run that cannot answer them is not
+a result. It is an anecdote.
 
 ---
 
-## Evaluation in practice — a change is real only if it clears the noise
+## Evaluation — a change is real only if it clears the noise
 
 LLM pipelines are stochastic; run the same day twice and the book differs. That makes the
 ordinary instinct — change a prompt, eyeball the output, ship it — actively dangerous: you will
@@ -118,11 +120,18 @@ So the question is answered against a measured baseline.
 **A behaviour-shaping change counts only if its effect clears roughly two standard deviations of
 the L1 band.**
 
+<details>
+<summary><b>Two cases worth reading</b></summary>
+
+<br>
+
 **A gate that had never bitten.** The frozen-replay gate seeded only part of its sandbox — the
 price cache, but not the earnings calendar — so any strategy drawing from a forced pool faced an
 empty candidate pool and passed in seconds against nothing at all. It had been green for its
 entire history. The lesson is not the bug: a gate that has never failed deserves suspicion, and
 "the tests are green" is a claim about the tests.
+
+<br>
 
 **The trigger had colonised the thesis.** Quantitative entry-unlock signals were visible to the
 generator, and the model began reciting them as the *reason* for the trade — a timing trigger
@@ -131,9 +140,17 @@ visibility routing. The evidence moved to evaluator-only scope: the trigger stil
 flags still compute, but the generator can no longer borrow them as an argument. Leakage went
 **from 1,741 occurrences to zero, with accepted-idea count unchanged.**
 
----
+</details>
 
-## Data engineering — crowding as a point-in-time artifact
+<details>
+<summary><b>Data engineering — crowding as a point-in-time artifact</b></summary>
+
+<br>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/crowding-dark.svg">
+  <img alt="Three attention legs feed leg construction, then two-stage scoring, then a dated artifact" src="assets/crowding-light.svg">
+</picture>
 
 Retail attention reads to an event book mainly as a *contrarian* signal: a name everybody has
 already found is a name whose move may already be spent. It is also the kind of input that
@@ -148,6 +165,8 @@ was rate-limiting *silently* — returning success, returning nothing. Throttlin
 took it from **386 to 1,924 names** overnight. Silent degradation is the failure mode worth
 designing for: an error you can see costs you an afternoon, a wrong number you trust costs you a
 quarter.
+
+</details>
 
 ---
 

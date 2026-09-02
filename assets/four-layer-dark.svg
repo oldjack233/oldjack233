@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 894 176" width="894" height="176" role="img">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#6e7681"/></marker></defs>
+  <rect x="8" y="12" width="212" height="112" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1.2"/>
+  <text x="114.0" y="39" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#e6edf3">&#9312;&#160;&#160;Data</text>
+  <text x="114.0" y="61" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">declared scope per market</text>
+  <text x="114.0" y="78" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">point-in-time cuts</text>
+  <text x="114.0" y="95" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">undeclared source &#8658; empty</text>
+  <rect x="230" y="12" width="212" height="112" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1.2"/>
+  <text x="336.0" y="39" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#e6edf3">&#9313;&#160;&#160;Strategy</text>
+  <text x="336.0" y="61" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">mandate + manifest</text>
+  <text x="336.0" y="78" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">inherits, writes only</text>
+  <text x="336.0" y="95" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">the differences</text>
+  <rect x="452" y="12" width="212" height="112" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1.2"/>
+  <text x="558.0" y="39" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#e6edf3">&#9314;&#160;&#160;Evaluation</text>
+  <text x="558.0" y="61" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">proposer &#8800; approver</text>
+  <text x="558.0" y="78" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">mechanical gates</text>
+  <text x="558.0" y="95" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">leak scan on the way out</text>
+  <rect x="674" y="12" width="212" height="112" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1.2"/>
+  <text x="780.0" y="39" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#e6edf3">&#9315;&#160;&#160;Memory</text>
+  <text x="780.0" y="61" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">partitioned per market</text>
+  <text x="780.0" y="78" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">live runs only</text>
+  <text x="780.0" y="95" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">human-gated promotion</text>
+  <path d="M223,68.0 L235,68.0" fill="none" stroke="#6e7681" stroke-width="1.4" marker-end="url(#a)"/>
+  <path d="M445,68.0 L457,68.0" fill="none" stroke="#6e7681" stroke-width="1.4" marker-end="url(#a)"/>
+  <path d="M667,68.0 L679,68.0" fill="none" stroke="#6e7681" stroke-width="1.4" marker-end="url(#a)"/>
+  <path d="M780.0,130 L780.0,162 L114.0,162 L114.0,132" fill="none" stroke="#6e7681" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#a)"/>
+  <text x="443" y="157" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" fill="#7d8590">next session&#8217;s recall</text>
+</svg>
