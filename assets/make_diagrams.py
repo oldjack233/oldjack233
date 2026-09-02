@@ -58,18 +58,18 @@ def svg(w, h, body, t):
 def four_layer(t):
     W, BX, Y, H = 212, [8, 230, 452, 674], 12, 112
     cells = [
-        ("&#9312;", "Data", ["declared scope per market",
-                             "point-in-time cuts",
+        ("&#9312;", "Data", ["each agent lists its sources",
+                             "history read as of that date",
                              "undeclared source &#8658; empty"]),
-        ("&#9313;", "Strategy", ["mandate + manifest",
-                                 "inherits, writes only",
-                                 "the differences"]),
-        ("&#9314;", "Evaluation", ["proposer &#8800; approver",
-                                   "mechanical gates",
-                                   "leak scan on the way out"]),
-        ("&#9315;", "Memory", ["partitioned per market",
-                               "live runs only",
-                               "human-gated promotion"]),
+        ("&#9313;", "Strategy", ["mandate + parameters",
+                                 "a variant inherits and",
+                                 "writes only what differs"]),
+        ("&#9314;", "Evaluation", ["proposer is not approver",
+                                   "checks done in code",
+                                   "scanned for hindsight"]),
+        ("&#9315;", "Memory", ["separate per market",
+                               "learns from live runs only",
+                               "a person approves each lesson"]),
     ]
     parts = [box(x, Y, W, H, title, lines, t, num=num)
              for x, (num, title, lines) in zip(BX, cells)]
@@ -85,10 +85,10 @@ def four_layer(t):
 # ── 2. the harness ────────────────────────────────────────────────────────────
 def harness(t):
     parts = []
-    inputs = [("Session transcript", "this run&#8217;s event stream"),
-              ("Session state", "frozen inputs, the day&#8217;s cut"),
-              ("Memory", "ledger + rules, not numbers"),
-              ("Policy and tools", "boundaries and capabilities")]
+    inputs = [("Session transcript", "what has happened in this run"),
+              ("Session state", "the day&#8217;s inputs, frozen"),
+              ("Memory", "past lessons, not raw numbers"),
+              ("Policy and tools", "what it may do, and use")]
     for i, (title, sub) in enumerate(inputs):
         y = 8 + i * 58
         parts.append(box(8, y, 236, 48, title, [], t, title_size=12.5))
@@ -98,32 +98,32 @@ def harness(t):
                            path=f"M248,{y + 24} C275,{y + 24} 278,122 296,122"))
     parts.append(box(302, 68, 168, 112, "Working set", ["the only thing", "the model sees"], t))
     parts.append(arrow(474, 124, 500, 124, t))
-    parts.append(box(506, 68, 156, 112, "Model call", ["K independent", "generations"], t))
+    parts.append(box(506, 68, 156, 112, "Model call", ["K independent tries", "on the same input"], t))
     parts.append(arrow(666, 124, 692, 124, t))
-    parts.append(box(698, 68, 188, 112, "Persist + receipt",
-                     ["what was used", "which config", "what survived"], t))
+    parts.append(box(698, 68, 188, 112, "Saved + receipt",
+                     ["what was used", "which settings", "what survived"], t))
     return svg(894, 248, "\n  ".join(parts), t)
 
 
 # ── 3. crowding pipeline ──────────────────────────────────────────────────────
 def crowding(t):
     parts = []
-    for i, name in enumerate(["Social mention share", "Peer-group spillover",
+    for i, name in enumerate(["Social mentions", "Peer-group spillover",
                               "Encyclopedia pageviews"]):
         y = 12 + i * 58
         parts.append(box(8, y, 214, 44, name, [], t, title_size=12.5))
         parts.append(arrow(226, y + 22, 268, 96, t,
                            path=f"M226,{y + 22} C250,{y + 22} 252,96 264,96"))
-    parts.append(box(270, 34, 196, 124, "Leg construction",
-                     ["share normalisation", "exponential decay",
-                      "anomaly vs trailing base", "bot traffic excluded"], t))
+    parts.append(box(270, 34, 196, 124, "Signal construction",
+                     ["normalised to a share", "decayed over time",
+                      "compared to its own base", "bot traffic excluded"], t))
     parts.append(arrow(470, 96, 496, 96, t))
     parts.append(box(502, 34, 196, 124, "Two-stage scoring",
-                     ["scored on within-set", "percentiles &#8212; no-signal",
-                      "names left unranked"], t))
+                     ["ranked only against", "the names active that day",
+                      "&#8212; the rest stay unranked"], t))
     parts.append(arrow(702, 96, 728, 96, t))
-    parts.append(box(734, 34, 152, 124, "Dated artifact",
-                     ["written once a day", "replay reads this", "file, or records a gap"], t))
+    parts.append(box(734, 34, 152, 124, "Dated file",
+                     ["written once a day", "a replay reads it", "or records it missing"], t))
     return svg(894, 186, "\n  ".join(parts), t)
 
 

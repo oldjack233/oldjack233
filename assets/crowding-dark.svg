@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 894 186" width="894" height="186" role="img">
   <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#6e7681"/></marker></defs>
   <rect x="8" y="12" width="214" height="44" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1.2"/>
-  <text x="115.0" y="39" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#e6edf3">Social mention share</text>
+  <text x="115.0" y="39" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#e6edf3">Social mentions</text>
   <path d="M226,34 C250,34 252,96 264,96" fill="none" stroke="#6e7681" stroke-width="1.4" marker-end="url(#a)"/>
   <rect x="8" y="70" width="214" height="44" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1.2"/>
   <text x="115.0" y="97" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#e6edf3">Peer-group spillover</text>
@@ -10,21 +10,21 @@
   <text x="115.0" y="155" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#e6edf3">Encyclopedia pageviews</text>
   <path d="M226,150 C250,150 252,96 264,96" fill="none" stroke="#6e7681" stroke-width="1.4" marker-end="url(#a)"/>
   <rect x="270" y="34" width="196" height="124" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1.2"/>
-  <text x="368.0" y="61" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#e6edf3">Leg construction</text>
-  <text x="368.0" y="83" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">share normalisation</text>
-  <text x="368.0" y="100" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">exponential decay</text>
-  <text x="368.0" y="117" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">anomaly vs trailing base</text>
+  <text x="368.0" y="61" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#e6edf3">Signal construction</text>
+  <text x="368.0" y="83" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">normalised to a share</text>
+  <text x="368.0" y="100" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">decayed over time</text>
+  <text x="368.0" y="117" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">compared to its own base</text>
   <text x="368.0" y="134" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">bot traffic excluded</text>
   <path d="M470,96 L496,96" fill="none" stroke="#6e7681" stroke-width="1.4" marker-end="url(#a)"/>
   <rect x="502" y="34" width="196" height="124" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1.2"/>
   <text x="600.0" y="61" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#e6edf3">Two-stage scoring</text>
-  <text x="600.0" y="83" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">scored on within-set</text>
-  <text x="600.0" y="100" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">percentiles &#8212; no-signal</text>
-  <text x="600.0" y="117" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">names left unranked</text>
+  <text x="600.0" y="83" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">ranked only against</text>
+  <text x="600.0" y="100" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">the names active that day</text>
+  <text x="600.0" y="117" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">&#8212; the rest stay unranked</text>
   <path d="M702,96 L728,96" fill="none" stroke="#6e7681" stroke-width="1.4" marker-end="url(#a)"/>
   <rect x="734" y="34" width="152" height="124" rx="8" fill="#161b22" stroke="#30363d" stroke-width="1.2"/>
-  <text x="810.0" y="61" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#e6edf3">Dated artifact</text>
+  <text x="810.0" y="61" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#e6edf3">Dated file</text>
   <text x="810.0" y="83" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">written once a day</text>
-  <text x="810.0" y="100" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">replay reads this</text>
-  <text x="810.0" y="117" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">file, or records a gap</text>
+  <text x="810.0" y="100" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">a replay reads it</text>
+  <text x="810.0" y="117" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" fill="#8b949e">or records it missing</text>
 </svg>

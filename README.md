@@ -1,31 +1,30 @@
 # Jack Tang
 
 **Hong Kong.** Buy-side execution 2023–2025 — equities, futures and IPO dark pool across six
-Asian and European markets. Now building the other half of that job: the machinery that
-decides what is worth trading, and the discipline that lets you check whether it was ever
-right.
+Asian and European markets. Since then I have been building the other half of that job: the
+system that decides what is worth trading, and the checks that show whether it was right.
 
-**The code isn't here.** I co-built the system below with a partner and the work is jointly
-ours, so what I publish is design reasoning, not source. This page is written for someone who
-has my CV open and wants to know whether the projects line is real — judge it on whether
-these are decisions a person actually had to make.
+**The code isn't here.** I built the system below with a partner and the work belongs to both
+of us, so what I publish is how it was designed, not the source. This page is for someone who
+has my CV open and wants to know whether the projects line is real. Judge it on whether these
+are decisions a person actually had to make.
 
 | Published here | Deliberately withheld |
 |---|---|
-| Architecture, and the reasoning behind it | Source code |
-| Design invariants, as principles | Live thresholds, weights, universe definitions |
-| Evaluation methodology, and the failures behind it | Prompts and mandates |
-| Data pipeline shape, and what broke | Any position, ticker-level output or performance figure |
+| The architecture, and why it is built that way | Source code |
+| The design rules, as principles | Live thresholds, weights, universe definitions |
+| How changes are evaluated, and the failures behind it | Prompts and mandates |
+| The shape of the data pipeline, and what broke | Any position, ticker or performance figure |
 
 ---
 
 ## TradeAgent — an AI research system for US equity event trading
 
 A multi-agent LLM system built on the Claude Agent SDK and LangGraph. It runs scheduled
-sessions across US, European and Japanese earnings universes and emits one auditable book of
-verdicts per run — direction, entry, exit, conviction, thesis, invalidation. It produces
-analysis, not orders: **there is no order-placing code path in the system** — an absent
-capability, not a disabled flag.
+sessions across US, European and Japanese earnings universes and produces one auditable book
+of verdicts per run — direction, entry, exit, conviction, thesis, invalidation. It writes
+analysis, not orders: **the system has no code path that can place an order.** The capability
+is not there at all; it is not a switch someone turned off.
 
 `~305 of 772 commits` · `29 architecture decision records` · `3 market sessions daily`
 
@@ -33,117 +32,125 @@ capability, not a disabled flag.
 
 ## Architecture — data, strategy, evaluation, memory
 
-Four layers, each owning exactly one kind of decision. The point of the split is that a new
-idea should be a directory someone copies, not a branch someone maintains.
+Four layers, each responsible for one kind of decision. The split exists so that a new idea is
+a directory you copy, not a branch you maintain.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/four-layer-dark.svg">
   <img alt="Four layers: data, strategy, evaluation, memory, with memory feeding the next session's recall" src="assets/four-layer-light.svg">
 </picture>
 
-**① Data — declaring a source is what grants access to it.** Each market's agent carries an
-explicit data scope, enforced at the read seam: an undeclared source returns *empty* and is
-noted on the receipt, rather than quietly working. Cross-market reads exist, but they have to
-be written down. Historical runs sit under harder law — the generator loses network access, a
-non-point-in-time endpoint returns nothing on a cache miss instead of reaching for today's
-value, and the shared price store is read-only. A number that did not exist on the day cannot
-enter a decision dated that day.
+**① Data — an agent can only read what it has declared.** Each market's agent lists the
+sources it is allowed to use, and the list is checked where the data is actually read: an
+undeclared source comes back empty and is recorded on the run receipt, instead of quietly
+working. One market can read another's data, but only if that is written down first.
+Historical runs follow stricter rules — the generator has no network access, a source that
+cannot answer "as of that date" returns nothing rather than today's value, and the shared
+price database is read-only. A number that did not exist on the day cannot go into a decision
+dated that day.
 
 **② Strategy — a strategy is a directory, not a fork.** The first version of any research agent
-is a script with the trader's judgment baked in; the second is that script copied six times.
-Here a strategy is a pack of files: a mandate saying what the model must think about, a manifest
-wiring the parameters, and thresholds enforced in code the model cannot re-argue in prose. A
-variant inherits its parent and writes only the differences, then runs as a parallel arm in its
-own namespace — structurally unable to touch the production ledger until a human promotes it in
-a one-line, revertible diff.
+is a script with the trader's judgment written into it; the second version is that script
+copied six times. Here a strategy is a folder of files: a mandate saying what the model must
+think about, a manifest holding the parameters, and thresholds enforced in code so the model
+cannot argue its way around them. A new variant inherits the original and only writes down what
+differs. It then runs alongside production in its own workspace and cannot write to the
+production ledger at all, until a person promotes it with a one-line change that is easy to
+undo.
 
 **③ Evaluation — the model that proposes an idea never approves it.** Approval is a separate
-stage with its own configuration, and any rule that can be checked arithmetically is checked in
-code rather than argued in prose. On the way out a leak scan looks for lookahead — a catalyst
-that had already printed, a date-maths bug, a future report; in replay it voids the whole day,
-live it raises a tripwire. The same scorer grades live books and historical replays: fork the
-scorer, and every offline lesson is about a system you are not running.
+stage with its own settings, and anything that can be checked by arithmetic is checked in code
+rather than argued in prose. Before results are saved, a scan looks for information the system
+could not have had at the time — a result that had already been published, a date calculation
+that is off by a day, a report from the future. In a historical replay that scan voids the whole
+day; in a live run it raises an alert. Live runs and historical replays are scored by the same
+code, because if you score them differently, everything you learn offline is about a system you
+are not running.
 
-**④ Memory — nothing durable is written unattended.** Each market keeps its own lessons behind
-one deliberately narrow shared channel, so a Tokyo mistake cannot quietly become a New York
-prior. The overnight layer drafts lessons from closed positions, but each candidate waits in a
-review state until a person promotes it, and it distils from live sessions only — an experiment
-can never teach the book something that never happened.
+**④ Memory — nothing is stored permanently without a person approving it.** Each market keeps
+its own lessons, and there is one narrow shared channel between them, so a mistake in Tokyo
+cannot quietly become an assumption in New York. Overnight, the system drafts lessons from the
+positions that closed that day, but each one waits for a person to approve it before it is
+stored — and it only learns from live sessions, so an experiment can never teach the book
+something that never actually happened.
 
 <details>
-<summary><b>Four invariants the prompt is not allowed to talk you out of</b></summary>
+<summary><b>Four rules the prompt is not allowed to talk you out of</b></summary>
 
 <br>
 
-Prompts drift. Someone softens a mandate at 2am and three weeks later the system is doing
-something nobody chose. The defence is to put the rules that must never break where the model
-cannot reach them, and to treat any violation as a bug regardless of what the prompt says.
+Prompts drift. Someone loosens a mandate late one night, and three weeks later the system is
+doing something nobody decided. The defence is to keep the rules that must never break out of
+the model's reach — in code, in the gates — and to treat any violation as a bug, whatever the
+prompt says.
 
 | | Rule | What it means in practice |
 |---|---|---|
-| **01** | **Proposer ≠ approver** | The model that generates an idea never approves it. Approval is a separate stage with its own configuration. No agent marks its own work. |
-| **02** | **Default-wait** | The resting state is to do nothing. Early entry needs a specific unlocked path whose quantitative legs are judged by code. **Skip is a first-class output — there is no idea quota.** |
-| **03** | **No lookahead** | The position must be complete before the catalyst prints. Historical runs are mechanically sandboxed with a hard leak scan, never weakened to make a backtest look better. |
-| **04** | **No execution path** | Analysis, email, dashboard. The capability to place an order does not exist in the codebase — which is what makes the claim checkable rather than promised. |
+| **01** | **The proposer is not the approver** | The model that generates an idea never approves it. Approval is a separate stage with its own settings. No agent marks its own work. |
+| **02** | **Do nothing by default** | The resting state is to stay out. Entering early requires a specific unlocked path whose numeric conditions are judged by code. **Skipping is a valid answer — there is no quota of ideas.** |
+| **03** | **No hindsight** | The position has to be complete before the result is published. Historical runs are sandboxed and scanned for leaks, and that is never loosened to make a backtest look better. |
+| **04** | **No way to trade** | Analysis, email, dashboard. The ability to place an order does not exist in the codebase, which is what makes the claim checkable instead of just promised. |
 
 </details>
 
-### Underneath all four — context is assembled, not remembered
+### What the model actually sees on each run
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/harness-dark.svg">
   <img alt="Transcript, session state, memory and policy assemble into one working set, which is all the model sees" src="assets/harness-light.svg">
 </picture>
 
-The model knows nothing between runs; something assembles a working set and hands it over. If
-you cannot say precisely what was in it, you cannot explain the output, let alone reproduce it
-a month later — so every receipt answers five questions: **what woke it · which state it read ·
-under whose authority · what it executed · what survived.** A run that cannot answer them is not
-a result. It is an anecdote.
+The model remembers nothing between runs. Each run, the system assembles a working set and
+hands it over — that set is everything the model can see. So if you cannot say exactly what
+went into it, you cannot explain the output, and you certainly cannot reproduce it a month
+later. Every run therefore leaves a receipt answering five questions: **what started it · which
+data it read · under whose permissions · what it ran · what survived.** A run that cannot answer
+them is a story, not a result.
 
 ---
 
-## Evaluation — a change is real only if it clears the noise
+## Evaluation — telling a real improvement from noise
 
-LLM pipelines are stochastic; run the same day twice and the book differs. That makes the
-ordinary instinct — change a prompt, eyeball the output, ship it — actively dangerous: you will
-confirm every hypothesis you bring, because the noise is larger than the effect you came for.
-So the question is answered against a measured baseline.
+These pipelines are stochastic: run the same day twice and the book comes out different. That
+makes the normal instinct — change a prompt, look at the output, ship it — genuinely dangerous,
+because on any given day the difference you are looking at is usually noise, and you will
+confirm whatever you were hoping for. So a change is measured against a baseline instead.
 
-| | Rung | The question it answers |
+| | Level | The question it answers |
 |---|---|---|
-| **L1** | Stability | How loud is the room? Repeat an identical run to measure the noise band — the denominator for everything above it. |
-| **L2** | Unit and judgment sets | Does the brain judge correctly? Deterministic tests, plus a hand-labelled set the evaluator must classify the way a trader would. |
-| **L3** | Frozen replay gate | Would this change have broken a real day? Graph-level replay at a fixed as-of date; non-zero exit means it does not ship. |
-| **L4** | Attribution | Was the effect real, or was it Tuesday? Every run stamps its config hash, so months of paper results group by the version that produced them. |
+| **L1** | Stability | How much do two identical runs differ? Repeating a run measures the noise, which is the yardstick for everything else. |
+| **L2** | Unit and judgment tests | Does the evaluator judge correctly? Ordinary tests, plus a hand-labelled set of ideas it has to classify the way a trader would. |
+| **L3** | Frozen replay gate | Would this change have broken a real day? The whole graph is replayed against a fixed past date; if it fails, the change does not ship. |
+| **L4** | Attribution | Was the effect real, or just that week? Every run records which configuration produced it, so months of paper results can be grouped by version. |
 
-**A behaviour-shaping change counts only if its effect clears roughly two standard deviations of
-the L1 band.**
+**A change to how the system behaves only counts if its effect is about twice the size of the
+L1 noise.**
 
 <details>
 <summary><b>Two cases worth reading</b></summary>
 
 <br>
 
-**A gate that had never bitten.** The frozen-replay gate seeded only part of its sandbox — the
-price cache, but not the earnings calendar — so any strategy drawing from a forced pool faced an
-empty candidate pool and passed in seconds against nothing at all. It had been green for its
-entire history. The lesson is not the bug: a gate that has never failed deserves suspicion, and
-"the tests are green" is a claim about the tests.
+**A gate that had never actually caught anything.** The frozen-replay gate only loaded part of
+its sandbox — the price cache, but not the earnings calendar. So any strategy that picked names
+from a fixed pool found an empty pool, and passed in a few seconds against nothing at all. It
+had been reporting success for its entire history. The lesson is not the bug: a gate that has
+never failed deserves suspicion, and "the tests pass" is a statement about the tests.
 
 <br>
 
-**The trigger had colonised the thesis.** Quantitative entry-unlock signals were visible to the
-generator, and the model began reciting them as the *reason* for the trade — a timing trigger
-laundered into an investment argument. The instinct is to delete the data; the better fix was
-visibility routing. The evidence moved to evaluator-only scope: the trigger still fires and the
-flags still compute, but the generator can no longer borrow them as an argument. Leakage went
-**from 1,741 occurrences to zero, with accepted-idea count unchanged.**
+**The timing signal had become the argument.** The generator could see the numeric conditions
+that unlock an early entry, and it started giving them as the *reason* for the trade — a timing
+trigger presented as an investment case. The obvious fix is to delete the data; the better fix
+was to change who can see it. The evidence moved to the approval stage only, so the trigger
+still fires and the flags still compute, but the generator can no longer use them as an
+argument. Its use of that vocabulary went **from 1,741 occurrences to zero, and the number of
+accepted ideas did not change.**
 
 </details>
 
 <details>
-<summary><b>Data engineering — crowding as a point-in-time artifact</b></summary>
+<summary><b>Data engineering — crowding data, stored as of the day it was true</b></summary>
 
 <br>
 
@@ -152,19 +159,20 @@ flags still compute, but the generator can no longer borrow them as an argument.
   <img alt="Three attention legs feed leg construction, then two-stage scoring, then a dated artifact" src="assets/crowding-light.svg">
 </picture>
 
-Retail attention reads to an event book mainly as a *contrarian* signal: a name everybody has
-already found is a name whose move may already be spent. It is also the kind of input that
-quietly destroys a backtest, because the convenient sources are all *current* — ask them about
-last March and they answer with today. So the legs are normalised, decayed, compared against a
-trailing base, scored within the active set rather than the whole universe, and written once a
-day to a dated artifact that replay either reads or records as a gap. Absence of attention is
-scored *not-ranked*, never zero.
+Retail attention is mostly useful as a contrarian signal: a name everyone has already found is
+a name whose move may already be over. It is also the kind of data that quietly ruins a
+backtest, because the convenient sources only know about *now* — ask them about last March and
+they answer with today. So each input is normalised, decayed, and compared against its own
+recent baseline; names are ranked only against the others that are active that day, not against
+the whole universe; and the result is written once a day to a dated file that a replay either
+reads or records as missing. A name with no attention at all is marked *unranked*, never zero —
+no signal is not the same as no interest.
 
-**Field note.** Coverage on one leg sat at a fifth of the universe for weeks: the upstream API
-was rate-limiting *silently* — returning success, returning nothing. Throttling and a retry path
-took it from **386 to 1,924 names** overnight. Silent degradation is the failure mode worth
-designing for: an error you can see costs you an afternoon, a wrong number you trust costs you a
-quarter.
+**Field note.** One input covered only a fifth of the universe for weeks before anyone asked
+why. The upstream API was rate-limiting silently: it returned success, and returned nothing.
+Slowing the requests down and adding retries took coverage from **386 to 1,924 names**
+overnight. Silent failures are the ones worth designing against — an error you can see costs
+you an afternoon, a wrong number you trust costs you a quarter.
 
 </details>
 
@@ -172,11 +180,13 @@ quarter.
 
 ## Tooling
 
-- **Research desk** (Plotly Dash) — books every accepted idea at end-of-day marks and carries it
-  until its exit rule fires. Strictly downstream: it reads the pipeline's artifacts and never
-  writes to them, so a dashboard bug cannot corrupt the research record.
-- **Post-print review agent** — reads SEC EDGAR 8-K Item 2.02 filings and computes the guidance
-  delta *in code* rather than asking the model to read it off the page.
+- **Research desk** (Plotly Dash) — records every accepted idea at that day's close and tracks
+  it until its exit rule fires, so the record builds up whether or not anyone is watching. It
+  only reads what the pipeline produces and never writes back, so a dashboard bug cannot
+  corrupt the research record.
+- **Post-print review agent** — reads the SEC 8-K filing after results are published and
+  calculates the change in guidance in code, rather than asking the model to read it off the
+  page.
 
 ---
 
