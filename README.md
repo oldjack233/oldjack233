@@ -5,7 +5,6 @@ Japan, Korea, Taiwan, China A-shares, Hong Kong and Europe. Now building the oth
 that job: the machinery that decides what is worth trading, and the discipline that lets you
 check whether it was ever right.
 
-Currently reading a Juris Master at Tsinghua University Law School (2026–2028).
 
 ---
 
