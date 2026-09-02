@@ -226,7 +226,7 @@ you can see costs you an afternoon, a wrong number you trust costs you a quarter
 | **2024–2025** | Trader, Hong Kong buy-side fund. 100+ orders daily across six markets; ran a USD 1m prop book. SFC Type 1 licensed representative. |
 | **2023–2024** | Investment analyst, Hong Kong. Multi-asset execution and allocation proposals for high-net-worth clients. |
 | **2022** | Equity research intern, CLSA (return offer). |
-| **Education** | BSc Actuarial Science, University of Hong Kong · visiting student, UC Berkeley · Juris Master, Tsinghua University Law School (2026–2028) |
+| **Education** | BSc Actuarial Science, University of Hong Kong · visiting student, UC Berkeley |
 | **Languages** | English, Mandarin, Cantonese |
 
 ---
